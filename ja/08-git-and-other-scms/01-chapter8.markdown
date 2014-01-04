@@ -363,14 +363,14 @@ Subversion に慣れているので SVN が出力する形式で歴史を見た�
 
 SVN で使っている作者の一覧を取得するには、このようにします。
 
-	$ svn log --xml | grep -P "^<author" | sort -u | \
+	$ svn log ^/ --xml | grep -P "^<author" | sort -u | \
 	      perl -pe 's/<author>(.*?)<\/author>/$1 = /' > users.txt
 
 これは、まずログを XML フォーマットで出力します。その中から作者を捜して重複を省き、XML を除去します (ちょっと見ればわかりますが、これは `grep` や `sort`、そして `perl` といったコマンドが使える環境でないと動きません)。この出力を users.txt にリダイレクトし、そこに Git のユーザーデータを書き足していきます。
 
 このファイルを `git svn` に渡せば、作者のデータをより正確にマッピングできるようになります。また、Subversion が通常インポートするメタデータを含めないよう `git svn` に指示することもできます。そのためには `--no-metadata` を `clone` コマンドあるいは `init` コマンドに渡します。そうすると、 `import` コマンドは次のようになります。
 
-	$ git-svn clone http://my-project.googlecode.com/svn/ \
+	$ git svn clone http://my-project.googlecode.com/svn/ \
 	      --authors-file=users.txt --no-metadata -s my_project
 
 これで、Subversion をちょっとマシにインポートした `my_project` ディレクトリができあがりました。コミットがこんなふうに記録されるのではなく、
