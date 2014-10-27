@@ -328,6 +328,17 @@ Puoi ottenere le infommazioni disponibili con `svn info` eseguendo `git svn info
 
 Come per `blame` e `log`, le informazioni vengono ricercate offline e sono aggiornate all'ultima volta che si è comunicato con il server Subversion.
 
+Suggerimento: Se il tuo script di compilazione deve poter eseguire `svn info` è meglio porre un wrapper attorno a git.
+Qui c'è un esempio per i tuoi esperimenti:
+
+    #!/usr/bin/env bash
+
+    if git rev-parse --git-dir > /dev/null 2>&1 && [[ $1 == "info" ]] ; then
+      git svn info
+    else 
+      /usr/local/bin/svn "$@"
+    fi
+
 #### Ignorare ciò che Subversion ignora ####
 
 Se cloni un repository Subversion che abbia definito delle proprietà `svn:ignore`, vorrai avere un file `.gitignore` con le stesse proprietà per evitare di committare qualcosa che non dovresti. `git svn` ha due comandi per aiutarti a risolvere questo problema. Il primo, `git svn create-ignore`, crea automaticamente i file `.gitignore`, in modo che la committ successiva li includa.
@@ -336,7 +347,7 @@ Il secondo, `git svn show-ignore`, mostra nella console le righe che devi includ
 
 	$ git svn show-ignore > .git/info/exclude
 
-That way, you don’t litter the project with `.gitignore` files. This is a good option if you’re the only Git user on a Subversion team, and your teammates don’t want `.gitignore` files in the project.
+In questo modo non riempirai il progetto con i file `.gitignore`. Questa è una buona opzione se sei l'unico utente Git in un gruppo Subversion e i tuoi compagni non vogliono i file `.gitignore` nel progetto.
 
 ### Sommario Git-Svn ###
 
